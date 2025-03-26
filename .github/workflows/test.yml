@@ -11,9 +11,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - run: |
-        for i in {1..100}; do
-          echo "==== $i ===="
-          mkdir template
-          hdiutil create -fs HFSX -layout SPUD -size 750m "template.dmg" -srcfolder template -format UDRW -volname "reproducer"
-          rm -r template template.dmg
-        done
+          for i in {1..100}; do
+            echo "==== $i ===="
+            mkdir template
+            hdiutil create -fs HFSX -layout SPUD -size 750m "template.dmg" -srcfolder template -format UDRW -volname "reproducer"
+            rm -r template template.dmg
+          done
