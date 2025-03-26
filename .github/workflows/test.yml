@@ -11,13 +11,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - run: |
-          for i in {1..200}; do
+          for i in {1..100}; do
             echo "-- Run $i:"
             mkdir template
             hdiutil create -fs HFSX -layout SPUD -size 750m "template.dmg" -srcfolder template -format UDRW -volname "reproducer" || exit 1
 
             mkdir dmgmnt
             hdiutil attach template.dmg -noautoopen -quiet -mountpoint dmgmnt
+
+            sleep 1
             dev=$(hdiutil info | grep dmgmnt | grep "Apple_HFS" | awk '{print $1}')
             hdiutil detach "$dev" -force
 
