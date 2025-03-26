@@ -8,12 +8,19 @@ on:
 jobs:
   test:
     runs-on: macos-14
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - run: |
-          for i in {1..100}; do
-            echo "==== $i ===="
+          for i in {1..200}; do
+            echo "-- Run $i:"
             mkdir template
-            hdiutil create -fs HFSX -layout SPUD -size 750m "template.dmg" -srcfolder template -format UDRW -volname "reproducer"
-            rm -r template template.dmg
+            hdiutil create -fs HFSX -layout SPUD -size 750m "template.dmg" -srcfolder template -format UDRW -volname "reproducer" || exit 1
+
+            mkdir dmgmnt
+            hdiutil attach template.dmg -noautoopen -quiet -mountpoint dmgmnt
+            dev=$(hdiutil info | grep dmgmnt | grep "Apple_HFS" | awk '{print $1}')
+            hdiutil detach "$dev" -force
+
+            rm -r dmgmnt template template.dmg
+            sleep 1
           done
